@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibe Coding Tools &amp; Resources</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #F7F5F2;
+      font-family: 'DM Sans', sans-serif;
+      color: #1A1612;
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute; left: -9999px; top: auto;
+      width: 1px; height: 1px; overflow: hidden;
+      z-index: 1000; padding: 12px 24px;
+      background: #1A1612; color: #fff;
+      font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+      text-decoration: none; border-radius: 0 0 8px 0;
+    }
+    .skip-link:focus {
+      position: fixed; left: 0; top: 0;
+      width: auto; height: auto;
+    }
+
+    /* Visually hidden utility */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    /* Header */
+    .site-header {
+      background: linear-gradient(135deg, #1A1612 0%, #2D2923 100%);
+      padding: 48px 24px 40px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .header-pattern {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .header-eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+      color: #D6D3D1; margin-bottom: 12px; position: relative;
+    }
+    .site-header h1 {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: clamp(26px, 4.5vw, 38px); font-weight: 700; color: #FAFAF9;
+      margin-bottom: 10px; line-height: 1.2; position: relative;
+    }
+    .header-desc {
+      font-size: 15px; color: #D6D3D1; max-width: 520px; margin: 0 auto;
+      line-height: 1.5; position: relative;
+    }
+
+    /* Filter nav */
+    .filter-nav {
+      max-width: 960px; margin: 0 auto; padding: 20px 24px 0;
+    }
+    .search-wrap { margin-bottom: 14px; }
+    .search-input {
+      width: 100%; padding: 10px 16px;
+      font-family: 'DM Sans', sans-serif; font-size: 14px;
+      border: 2px solid #D6D0C8; border-radius: 8px;
+      background: #fff; color: #1A1612;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+    .search-input:focus {
+      border-color: #7C3AED;
+      box-shadow: 0 0 0 2px rgba(124,58,237,0.25);
+    }
+    .filter-group {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;
+    }
+    .filter-btn {
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+      padding: 6px 14px; border-radius: 20px; border: 2px solid #D6D0C8;
+      cursor: pointer; transition: all 0.15s;
+      outline: none; background: #fff; color: #3D3935;
+    }
+    .filter-btn:focus-visible {
+      box-shadow: 0 0 0 3px rgba(26,22,18,0.4);
+    }
+    .filter-btn[aria-pressed="true"] {
+      background: #1A1612; color: #fff; border-color: #1A1612;
+    }
+    .filter-btn.cat-btn:focus-visible {
+      box-shadow: 0 0 0 3px var(--cat-focus);
+    }
+    .filter-btn.cat-btn[aria-pressed="true"] {
+      background: var(--cat-color); color: #fff; border-color: var(--cat-color);
+    }
+
+    /* Main content */
+    .main-content {
+      max-width: 960px; margin: 0 auto; padding: 16px 24px 60px;
+    }
+    .no-results {
+      text-align: center; color: #636059; padding: 40px 0; font-size: 15px;
+    }
+    .category-section { margin-bottom: 32px; }
+    .category-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px; padding-bottom: 8px;
+    }
+    .category-icon { font-size: 20px; }
+    .category-header h2 {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 20px; font-weight: 700; color: #1A1612;
+    }
+    .category-count {
+      font-size: 12px; font-weight: 600;
+      padding: 2px 10px; border-radius: 12px;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+      gap: 12px;
+    }
+
+    /* Cards */
+    .card {
+      background: #fff; border-radius: 10px; padding: 20px 22px;
+      border: 1px solid #E8E4DF; transition: box-shadow 0.2s, border-color 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .card-accent {
+      position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+      border-radius: 10px 0 0 10px;
+    }
+    .card-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 12px; margin-bottom: 6px;
+    }
+    .card h3 {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 17px; font-weight: 700; color: #1A1612; line-height: 1.3;
+    }
+    .card-by {
+      font-size: 12px; color: #636059; letter-spacing: 0.02em; margin: 0;
+    }
+    .card-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 600; text-decoration: none;
+      padding: 4px 10px; border-radius: 6px;
+      transition: background 0.15s, outline-color 0.15s;
+      white-space: nowrap; flex-shrink: 0;
+      outline: 2px solid transparent; outline-offset: 2px;
+    }
+    .card-link:focus-visible {
+      outline-color: var(--dark-color);
+      background: var(--link-hover-bg) !important;
+    }
+    .card-link:hover {
+      background: var(--link-hover-bg) !important;
+    }
+    .card-note {
+      font-size: 13.5px; line-height: 1.6; color: #3D3935; margin: 0;
+    }
+
+    /* Footer */
+    .site-footer {
+      text-align: center; padding: 24px;
+      border-top: 1px solid #E8E4DF; background: #fff;
+    }
+    .site-footer p { font-size: 13px; color: #636059; }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-pattern" aria-hidden="true"></div>
+    <p class="header-eyebrow">Presentation Companion</p>
+    <h1>Vibe Coding Tools &amp; Resources</h1>
+    <p class="header-desc">Every tool, platform, and reference from the slide deck — with notes on what each one does and when you'll need it.</p>
+  </header>
+
+  <nav class="filter-nav" aria-label="Filter resources">
+    <div class="search-wrap">
+      <label for="search-input" class="sr-only">Search tools and resources</label>
+      <input id="search-input" class="search-input" type="search" placeholder="Search tools and resources...">
+    </div>
+    <div class="filter-group" role="group" aria-label="Filter by category" id="filter-buttons"></div>
+  </nav>
+
+  <div id="live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <main id="main-content" class="main-content"></main>
+
+  <footer class="site-footer">
+    <p>Vibe Coding: A Project-Based Guide to Building with AI for Higher Education · Chris Norcross, Palomar College · CC BY 4.0</p>
+  </footer>
+
+  <script>
+    const categories = [
+      {
+        id: "ai", label: "AI Assistants", icon: "🤖", color: "#0F766E",
+        items: [
+          { name: "Claude", by: "Anthropic", url: "https://claude.ai", note: "Strong at generating well-structured, readable code. Explains its reasoning clearly. Renders live webpage previews with publish link + copy export. Free tier available." },
+          { name: "ChatGPT", by: "OpenAI", url: "https://chat.openai.com", note: "The most widely known AI assistant. Handles code generation well. Renders live webpage previews with download or copy export. Free tier available." },
+          { name: "Google Gemini", by: "Google", url: "https://gemini.google.com", note: "Integrates with Google Workspace. Handles code generation well but only shows raw code (no live preview). Copy-only export. Free tier available." },
+          { name: "Cursor", by: "Cursor, Inc.", url: "https://cursor.com", note: "A VS Code-based editor with AI built in. Work with AI right where the code lives — no copy-pasting from a chat window. Slightly steeper learning curve. Free tier available." },
+          { name: "Replit", by: "Replit", url: "https://replit.com", note: "Browser-based coding environment with a built-in AI assistant. Nothing to install — everything runs in your browser. Great if your institution restricts software installation." }
+        ]
+      },
+      {
+        id: "dev", label: "Development Tools", icon: "🛠", color: "#7C3AED",
+        items: [
+          { name: "Visual Studio Code", by: "Microsoft", url: "https://code.visualstudio.com", note: "Free code editor for viewing, modifying, and saving code files. Runs on Windows, Mac, and Linux. Not the same as Visual Studio — make sure you download the lightweight, free one." },
+          { name: "Node.js", by: "OpenJS Foundation", url: "https://nodejs.org", note: "Lets you run JavaScript outside a browser. Used to build backend servers. Install when the time comes — not needed right away." },
+          { name: "Python", by: "Python Software Foundation", url: "https://python.org", note: "General-purpose language common in education and data work. Used for Flask web projects. Install later — not needed right away." },
+          { name: "GitHub", by: "Microsoft", url: "https://github.com", note: "Platform for storing and sharing code — like Google Drive for software projects. Used for deployment and collaboration. Free to create an account." }
+        ]
+      },
+      {
+        id: "hosting", label: "Hosting & Deployment", icon: "☁️", color: "#2563EB",
+        items: [
+          { name: "GitHub Pages", by: "GitHub", url: "https://pages.github.com", note: "Free static site hosting. Upload an HTML file, enable Pages in your repo settings, and get a live URL in minutes. Simplest option for single-file tools." },
+          { name: "Vercel", by: "Vercel", url: "https://vercel.com", note: "Free tier for hosting static sites and serverless functions. Automatic deployments from GitHub. Great for more complex projects." }
+        ]
+      },
+      {
+        id: "compliance", label: "Compliance & Accessibility", icon: "🛡", color: "#B91C1C",
+        items: [
+          { name: "WCAG 2.1 Guidelines", by: "W3C", url: "https://www.w3.org/WAI/WCAG21/quickref/", note: "Web Content Accessibility Guidelines — the standard for making digital tools accessible. Focus on semantic HTML, color contrast, alt text, keyboard navigation, and screen reader compatibility." },
+          { name: "ADA & Section 508", by: "U.S. Government", url: "https://www.section508.gov", note: "Federal requirements for accessible digital tools in education. The ADA and Section 508 of the Rehabilitation Act make accessibility a legal obligation, not just good practice." },
+          { name: "FERPA Overview", by: "U.S. Dept. of Education", url: "https://studentprivacy.ed.gov/ferpa", note: "Student data privacy law. Any tool handling student reflections, feedback, or records needs proper access control." },
+          { name: "OWASP Top Ten", by: "OWASP Foundation", url: "https://owasp.org/www-project-top-ten/", note: "The most critical web security risks. Essential reading when auditing and hardening your projects — covers XSS, SQL injection, insecure data storage, and more." }
+        ]
+      },
+      {
+        id: "references", label: "Key References", icon: "📚", color: "#4338CA",
+        items: [
+          { name: "Karpathy's \"Vibe Coding\" Post", by: "Andrej Karpathy, Feb 2, 2025", url: "https://x.com/karpathy/status/1886192184808149383", note: "The post on X that coined the term: \"fully give in to the vibes, embrace exponentials, and forget that the code even exists.\" Named Collins Dictionary Word of the Year 2025." },
+          { name: "Willison on Vibe Coding", by: "Simon Willison, Mar 19, 2025", url: "https://simonwillison.net/2025/Mar/19/vibe-coding/", note: "Blog post clarifying the spectrum: if an AI wrote every line but you reviewed, tested, and understood all of it, that's not vibe coding — that's AI-assisted engineering." },
+          { name: "Creative Commons BY 4.0", by: "Creative Commons", url: "https://creativecommons.org/licenses/by/4.0/", note: "The license for this presentation and its companion materials. You can read, share, adapt, and remix — as long as you provide attribution." }
+        ]
+      }
+    ];
+
+    const darkColorMap = {
+      "#0F766E": "#0B5E58",
+      "#7C3AED": "#5B21B6",
+      "#2563EB": "#1D4ED8",
+      "#B91C1C": "#991B1B",
+      "#4338CA": "#3730A3"
+    };
+
+    const linkSVG = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="flex-shrink:0"><path d="M11 7.5V11.5C11 12.05 10.55 12.5 10 12.5H2.5C1.95 12.5 1.5 12.05 1.5 11.5V4C1.5 3.45 1.95 3 2.5 3H6.5"/><path d="M8.5 1.5H12.5V5.5"/><path d="M5.5 8.5L12.5 1.5"/></svg>';
+
+    let activeFilter = null;
+    let searchQuery = "";
+    let announceTimeout = null;
+
+    function escapeHTML(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function renderCard(item, catColor) {
+      const dark = darkColorMap[catColor] || catColor;
+      const hoverBg = catColor + "22";
+      const baseBg = catColor + "12";
+      return `
+        <article class="card">
+          <div class="card-accent" style="background:${catColor}" aria-hidden="true"></div>
+          <div class="card-top">
+            <div>
+              <h3>${escapeHTML(item.name)}</h3>
+              <p class="card-by">${escapeHTML(item.by)}</p>
+            </div>
+            <a class="card-link" href="${escapeHTML(item.url)}" target="_blank" rel="noopener noreferrer"
+               aria-label="Visit ${escapeHTML(item.name)} (opens in new tab)"
+               style="color:${dark}; background:${baseBg}; --dark-color:${dark}; --link-hover-bg:${hoverBg}">
+              Visit ${linkSVG}
+            </a>
+          </div>
+          <p class="card-note">${escapeHTML(item.note)}</p>
+        </article>`;
+    }
+
+    function renderFilterButtons() {
+      const container = document.getElementById("filter-buttons");
+      let html = `<button class="filter-btn" aria-pressed="${!activeFilter}" data-filter="all">All</button>`;
+      categories.forEach(c => {
+        const isActive = activeFilter === c.id;
+        html += `<button class="filter-btn cat-btn" aria-pressed="${isActive}" data-filter="${c.id}"
+                   style="--cat-color:${c.color}; --cat-focus:${c.color}66">
+                   <span aria-hidden="true">${c.icon} </span>${escapeHTML(c.label)}</button>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function getFiltered() {
+      const q = searchQuery.toLowerCase();
+      return categories
+        .filter(c => !activeFilter || c.id === activeFilter)
+        .map(c => ({
+          ...c,
+          items: c.items.filter(item => {
+            if (!q) return true;
+            return item.name.toLowerCase().includes(q) ||
+                   item.by.toLowerCase().includes(q) ||
+                   item.note.toLowerCase().includes(q);
+          })
+        }))
+        .filter(c => c.items.length > 0);
+    }
+
+    function render() {
+      const filtered = getFiltered();
+      const main = document.getElementById("main-content");
+      const totalResults = filtered.reduce((sum, c) => sum + c.items.length, 0);
+
+      if (filtered.length === 0) {
+        main.innerHTML = '<p class="no-results">No resources match your search.</p>';
+      } else {
+        let html = "";
+        filtered.forEach(cat => {
+          const dark = darkColorMap[cat.color] || cat.color;
+          html += `
+            <section class="category-section" aria-labelledby="heading-${cat.id}">
+              <div class="category-header" style="border-bottom: 2px solid ${cat.color}22">
+                <span class="category-icon" aria-hidden="true">${cat.icon}</span>
+                <h2 id="heading-${cat.id}">${escapeHTML(cat.label)}</h2>
+                <span class="category-count" aria-label="${cat.items.length} items"
+                      style="color:${dark}; background:${cat.color}15">${cat.items.length}</span>
+              </div>
+              <div class="card-grid">
+                ${cat.items.map(item => renderCard(item, cat.color)).join("")}
+              </div>
+            </section>`;
+        });
+        main.innerHTML = html;
+      }
+
+      // Update filter button states
+      renderFilterButtons();
+
+      // Announce to screen readers (debounced)
+      clearTimeout(announceTimeout);
+      announceTimeout = setTimeout(() => {
+        const region = document.getElementById("live-region");
+        if (searchQuery || activeFilter) {
+          const catLabel = activeFilter ? categories.find(c => c.id === activeFilter)?.label : "";
+          region.textContent = `Showing ${totalResults} resource${totalResults !== 1 ? "s" : ""}${catLabel ? " in " + catLabel : ""}${searchQuery ? ' matching "' + searchQuery + '"' : ""}`;
+        } else {
+          region.textContent = "";
+        }
+      }, 300);
+    }
+
+    // Event: search input
+    document.getElementById("search-input").addEventListener("input", function(e) {
+      searchQuery = e.target.value;
+      render();
+    });
+
+    // Event: filter buttons (delegated)
+    document.getElementById("filter-buttons").addEventListener("click", function(e) {
+      const btn = e.target.closest(".filter-btn");
+      if (!btn) return;
+      const filter = btn.dataset.filter;
+      if (filter === "all") {
+        activeFilter = null;
+      } else {
+        activeFilter = activeFilter === filter ? null : filter;
+      }
+      render();
+    });
+
+    // Initial render
+    render();
+  </script>
+</body>
+</html>
