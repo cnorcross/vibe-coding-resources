@@ -151,20 +151,35 @@
     .card-by {
       font-size: 15px; color: #636059; letter-spacing: 0.02em; margin: 0;
     }
-    .card-link {
-      display: inline-flex; align-items: center; gap: 5px;
-      font-size: 15px; font-weight: 600; text-decoration: none;
-      padding: 4px 10px; border-radius: 6px;
-      transition: background 0.15s, outline-color 0.15s;
-      white-space: nowrap; flex-shrink: 0;
+    .card-name-link {
+      color: #1D4ED8; text-decoration: underline; text-underline-offset: 3px;
+      display: inline-flex; align-items: center; gap: 6px;
+      border-radius: 4px;
       outline: 2px solid transparent; outline-offset: 2px;
+      transition: color 0.15s;
     }
-    .card-link:focus-visible {
-      outline-color: var(--dark-color);
-      background: var(--link-hover-bg) !important;
+    .card-name-link:hover { color: #1E40AF; }
+    .card-name-link:focus-visible { outline-color: #1D4ED8; }
+    .card-name-link svg { flex-shrink: 0; }
+    .sub-resource-label-link {
+      font-size: 15px; font-weight: 600;
+      color: #1D4ED8; text-decoration: underline; text-underline-offset: 3px;
+      display: inline-flex; align-items: center; gap: 5px;
+      white-space: nowrap;
+      border-radius: 4px;
+      outline: 2px solid transparent; outline-offset: 2px;
+      transition: color 0.15s;
     }
-    .card-link:hover {
-      background: var(--link-hover-bg) !important;
+    .sub-resource-label-link:hover { color: #1E40AF; }
+    .sub-resource-label-link:focus-visible { outline-color: #1D4ED8; }
+    .sub-resource-label-link svg { flex-shrink: 0; }
+    @media (prefers-color-scheme: dark) {
+      .card-name-link { color: #93C5FD; }
+      .card-name-link:hover { color: #BFDBFE; }
+      .card-name-link:focus-visible { outline-color: #93C5FD; }
+      .sub-resource-label-link { color: #93C5FD; }
+      .sub-resource-label-link:hover { color: #BFDBFE; }
+      .sub-resource-label-link:focus-visible { outline-color: #93C5FD; }
     }
     .card-note {
       font-size: 17px; line-height: 1.6; color: #3D3935; margin: 0;
@@ -185,32 +200,11 @@
       justify-content: space-between;
       gap: 12px;
     }
-    .sub-resource-label {
-      font-size: 15px;
-      font-weight: 600;
-      color: #3D3935;
-      white-space: nowrap;
-    }
     .sub-resource-note {
       font-size: 14px;
       color: #636059;
       line-height: 1.5;
       margin-top: 2px;
-    }
-    .sub-resource-link {
-      display: inline-flex; align-items: center; gap: 5px;
-      font-size: 13px; font-weight: 600; text-decoration: none;
-      padding: 3px 8px; border-radius: 6px;
-      transition: background 0.15s, outline-color 0.15s;
-      white-space: nowrap; flex-shrink: 0;
-      outline: 2px solid transparent; outline-offset: 2px;
-    }
-    .sub-resource-link:hover {
-      background: var(--link-hover-bg) !important;
-    }
-    .sub-resource-link:focus-visible {
-      outline-color: var(--dark-color);
-      background: var(--link-hover-bg) !important;
     }
 
     /* Link groups (projects) */
@@ -407,14 +401,10 @@
         const rows = item.subResources.map(sub => `
           <div class="sub-resource-row">
             <div>
-              <span class="sub-resource-label">${escapeHTML(sub.name)}</span>
+              <a class="sub-resource-label-link" href="${escapeHTML(sub.url)}" target="_blank" rel="noopener noreferrer"
+                 style="--dark-color:${dark}; --link-hover-bg:${hoverBg}">${escapeHTML(sub.name)} ${linkSVG}</a>
               ${sub.note ? `<p class="sub-resource-note">${escapeHTML(sub.note)}</p>` : ""}
             </div>
-            <a class="sub-resource-link" href="${escapeHTML(sub.url)}" target="_blank" rel="noopener noreferrer"
-               aria-label="Visit ${escapeHTML(sub.name)} (opens in new tab)"
-               style="color:${dark}; background:${baseBg}; --dark-color:${dark}; --link-hover-bg:${hoverBg}">
-              Visit ${linkSVG}
-            </a>
           </div>`).join("");
         subResourcesHTML = `<div class="sub-resources">${rows}</div>`;
       }
@@ -424,36 +414,28 @@
           const rows = group.links.map(link => `
             <div class="sub-resource-row">
               <div>
-                <span class="sub-resource-label">${escapeHTML(link.name)}</span>
+                <a class="sub-resource-label-link" href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer"
+                   style="--dark-color:${dark}; --link-hover-bg:${hoverBg}">${escapeHTML(link.name)} ${linkSVG}</a>
                 ${link.note ? `<p class="sub-resource-note">${escapeHTML(link.note)}</p>` : ""}
               </div>
-              <a class="sub-resource-link" href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer"
-                 aria-label="${escapeHTML(link.name)} (opens in new tab)"
-                 style="color:${dark}; background:${baseBg}; --dark-color:${dark}; --link-hover-bg:${hoverBg}">
-                Visit ${linkSVG}
-              </a>
             </div>`).join("");
           return `<div><p class="link-group-label">${escapeHTML(group.label)}</p><div class="link-group-rows">${rows}</div></div>`;
         }).join("");
         linkGroupsHTML = `<div class="link-groups">${groups}</div>`;
       }
 
-      const visitBtn = item.url ? `
-            <a class="card-link" href="${escapeHTML(item.url)}" target="_blank" rel="noopener noreferrer"
-               aria-label="Visit ${escapeHTML(item.name)} (opens in new tab)"
-               style="color:${dark}; background:${baseBg}; --dark-color:${dark}; --link-hover-bg:${hoverBg}">
-              Visit ${linkSVG}
-            </a>` : "";
+      const visitBtn = "";
 
       return `
         <article class="card">
           <div class="card-accent" style="background:${catColor}" aria-hidden="true"></div>
           <div class="card-top">
             <div>
-              <h3>${escapeHTML(item.name)}</h3>
+              <h3>${item.url
+                ? `<a class="card-name-link" href="${escapeHTML(item.url)}" target="_blank" rel="noopener noreferrer" style="--dark-color:${dark}; --link-hover-bg:${hoverBg}">${escapeHTML(item.name)} ${linkSVG}</a>`
+                : escapeHTML(item.name)}</h3>
               <p class="card-by">${escapeHTML(item.by)}</p>
             </div>
-            ${visitBtn}
           </div>
           <p class="card-note">${escapeHTML(item.note)}</p>
           ${subResourcesHTML}
